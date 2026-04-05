@@ -1,8 +1,6 @@
-package com.g4vrk.functionalActions.actions;
+package com.g4vrk.functionalActions;
 
-import com.g4vrk.functionalLib.FunctionalLibAPI;
-import com.g4vrk.functionalLib.actions.registry.ActionRegistry;
-import com.g4vrk.functionalLib.util.TaskUtil;
+import com.g4vrk.functionalActions.registry.ActionRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,20 +51,13 @@ public final class ActionExecutor<T> {
         var optionalAction = registry.getAction(key);
 
         if (optionalAction.isEmpty()) {
-            FunctionalLibAPI.getAPI().ifPresent(api ->
-                    api.getLogger().error("Неизвестное действие: {}", rawKey)
-            );
+            logger.error("Неизвестное действие: {}", rawKey);
             return;
         }
 
         Action<T> action = optionalAction.get();
 
-        Runnable task = () -> action.execute(context, args);
-
-        if (action.runAsync())
-            TaskUtil.runAsync(task);
-        else
-            TaskUtil.runSync(task);
+        action.execute(context, args);
     }
 
     private String[] splitAction(String input) {

@@ -1,22 +1,22 @@
-package com.g4vrk.functionalActions.actions.impl.player;
+package com.g4vrk.functionalActions.impl.player;
 
-import com.g4vrk.functionalActions.actions.AbstractAction;
-import com.g4vrk.functionalActions.actions.util.SendUtil;
+import com.g4vrk.functionalActions.AbstractAction;
+import com.g4vrk.functionalActions.util.SendUtil;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("deprecation")
 public class SoundAction extends AbstractAction<Player> {
 
     public SoundAction() {
-        super(new NamespacedKey("functionallib", "sound"));
+        super("sound");
     }
 
     @Override
-    public void execute(Player player, String args) {
-        if (args == null || args.isBlank() || player == null) return;
+    public void execute(@NotNull Player player, @NotNull String args) {
+        if (args.isBlank()) return;
 
         String[] parts = args.split(";", 3);
 

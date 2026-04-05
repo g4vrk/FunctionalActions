@@ -1,22 +1,21 @@
-package com.g4vrk.functionalActions.actions.impl.player;
+package com.g4vrk.functionalActions.impl.player;
 
-import com.g4vrk.functionalActions.actions.AbstractAction;
-import com.g4vrk.functionalActions.actions.util.SendUtil;
-import org.bukkit.NamespacedKey;
+import com.g4vrk.functionalActions.AbstractAction;
+import com.g4vrk.functionalActions.util.SendUtil;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-@SuppressWarnings("deprecation")
 public class ActionBarAction extends AbstractAction<Player> {
 
     public ActionBarAction() {
-        super(new NamespacedKey("functionallib", "action-bar"), List.of("actionbar"));
+        super("action-bar", List.of("actionbar"));
     }
 
     @Override
-    public void execute(Player player, String args) {
-        if (args == null || args.isBlank() || player == null) return;
+    public void execute(@NotNull Player player, @NotNull String args) {
+        if (args.isBlank()) return;
 
         SendUtil.sendActionBar(player, args);
     }

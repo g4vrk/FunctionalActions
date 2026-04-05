@@ -1,24 +1,24 @@
-package com.g4vrk.functionalActions.actions.impl.player;
+package com.g4vrk.functionalActions.impl.player;
 
 import com.g4vrk.fastTextFormatter.TextFormatter;
-import com.g4vrk.functionalActions.actions.AbstractAction;
-import com.g4vrk.functionalActions.actions.util.SendUtil;
+import com.g4vrk.functionalActions.AbstractAction;
+import com.g4vrk.functionalActions.util.SendUtil;
 import net.kyori.adventure.text.Component;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("deprecation")
 public class TitleAction extends AbstractAction<Player> {
 
     private final TextFormatter textFormatter = TextFormatter.textFormatter();
 
     public TitleAction() {
-        super(new NamespacedKey("functionallib", "title"));
+        super("title");
     }
 
     @Override
-    public void execute(Player player, String args) {
-        if (args == null || args.isBlank() || player == null) return;
+    public void execute(@NotNull Player player, @NotNull String args) {
+        if (args.isBlank()) return;
 
         String[] parts = args.split(";");
 

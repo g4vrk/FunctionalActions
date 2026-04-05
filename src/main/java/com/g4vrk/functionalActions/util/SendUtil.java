@@ -1,4 +1,4 @@
-package com.g4vrk.functionalActions.actions.util;
+package com.g4vrk.functionalActions.util;
 
 import com.g4vrk.fastTextFormatter.TextFormatter;
 import net.kyori.adventure.sound.Sound;
@@ -22,7 +22,7 @@ public final class SendUtil {
 
     private static final boolean NATIVE_SUPPORT = hasNativeSupport();
     
-    private SendUtil() {
+    public SendUtil() {
         throw new UnsupportedOperationException();
     }
 

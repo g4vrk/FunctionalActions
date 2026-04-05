@@ -1,6 +1,5 @@
-package com.g4vrk.functionalActions.actions;
+package com.g4vrk.functionalActions;
 
-import org.bukkit.NamespacedKey;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -9,36 +8,25 @@ import java.util.List;
 
 public abstract class AbstractAction<T> implements Action<T> {
 
-    private final NamespacedKey namespacedKey;
+    private final String key;
     private final List<String> aliases;
-    private final boolean runAsync;
 
-    public AbstractAction(NamespacedKey namespacedKey) {
-        this(namespacedKey, Collections.emptyList(), false);
+    public AbstractAction(@NotNull String key) {
+        this(key, Collections.emptyList());
     }
 
-    public AbstractAction(NamespacedKey namespacedKey, List<String> aliases) {
-        this(namespacedKey, aliases, false);
-    }
-
-    protected AbstractAction(NamespacedKey namespacedKey, List<String> aliases, boolean runAsync) {
-        this.namespacedKey = namespacedKey;
+    public AbstractAction(@NotNull String key, @NotNull List<String> aliases) {
+        this.key = key;
         this.aliases = aliases;
-        this.runAsync = runAsync;
     }
 
     @Override
-    public @NotNull NamespacedKey getKey() {
-        return namespacedKey;
+    public @NotNull String getKey() {
+        return key;
     }
 
     @Override
     public @NotNull Collection<String> getAliases() {
         return aliases;
-    }
-
-    @Override
-    public boolean runAsync() {
-        return runAsync;
     }
 }

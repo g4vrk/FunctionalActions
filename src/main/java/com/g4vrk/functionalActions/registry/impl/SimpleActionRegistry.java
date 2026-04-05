@@ -1,8 +1,7 @@
-package com.g4vrk.functionalActions.actions.registry.impl;
+package com.g4vrk.functionalActions.registry.impl;
 
-import com.g4vrk.functionalActions.actions.Action;
-import com.g4vrk.functionalActions.actions.registry.ActionRegistry;
-import org.bukkit.NamespacedKey;
+import com.g4vrk.functionalActions.Action;
+import com.g4vrk.functionalActions.registry.ActionRegistry;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -11,8 +10,7 @@ import java.util.function.Predicate;
 
 public class SimpleActionRegistry<T> implements ActionRegistry<T> {
 
-    private final Map<NamespacedKey, Action<T>> byKey = new ConcurrentHashMap<>();
-    private final Map<String, Action<T>> byString = new ConcurrentHashMap<>();
+    private final Map<String, Action<T>> actionMap = new ConcurrentHashMap<>();
 
     @Override
     public void register(@NotNull Action<T> action) {
@@ -25,37 +23,26 @@ public class SimpleActionRegistry<T> implements ActionRegistry<T> {
     }
 
     private void register0(Action<T> action) {
-        NamespacedKey key = action.getKey();
+        registerKey(action.getKey(), action, false);
 
-        if (byKey.containsKey(key)) {
-            throw new IllegalStateException(
-                    "Действие '" + key + "' уже зарегистрировано (" + byKey.get(key).getClass().getSimpleName() + ")"
-            );
+        for (String alias : action.getAliases()) {
+            registerKey(alias, action, false);
         }
-
-        byKey.put(key, action);
-
-        registerString(key.toString(), action, false);
-        registerString(key.getKey(), action, false);
-
-        for (String alias : action.getAliases()) registerString(alias, action, false);
     }
 
-    private void registerString(String key, Action<T> action, boolean override) {
+    private void registerKey(String key, Action<T> action, boolean override) {
         String normalized = normalize(key);
 
-        if (!override && byString.containsKey(normalized)) {
-            throw new IllegalStateException(
-                    "Алиас '" + normalized + "' уже занят (" + byString.get(normalized).getClass().getSimpleName() + ")"
-            );
+        if (!override && actionMap.containsKey(normalized)) {
+            throw new IllegalStateException("Key '" + normalized + "' already registered by " + actionMap.get(normalized).getClass().getSimpleName());
         }
 
-        byString.put(normalized, action);
+        actionMap.put(normalized, action);
     }
 
     @Override
     public void override(@NotNull String key, @NotNull Action<T> action) {
-        registerString(key, action, true);
+        registerKey(key, action, true);
     }
 
     @Override
@@ -66,55 +53,44 @@ public class SimpleActionRegistry<T> implements ActionRegistry<T> {
 
     @Override
     public void unregister(@NotNull String key) {
-        byString.remove(normalize(key));
+        actionMap.remove(normalize(key));
     }
 
     @Override
     public void unregister(@NotNull Action<T> action) {
-        byKey.entrySet().removeIf(e -> e.getValue().equals(action));
-        byString.entrySet().removeIf(e -> e.getValue().equals(action));
+        actionMap.entrySet().removeIf(e -> e.getValue() == action);
     }
 
     @Override
     public @NotNull Optional<Action<T>> getAction(@NotNull String key) {
-        return Optional.ofNullable(byString.get(normalize(key)));
-    }
-
-    @Override
-    public @NotNull Optional<Action<T>> getAction(@NotNull NamespacedKey key) {
-        return Optional.ofNullable(byKey.get(key));
+        return Optional.ofNullable(actionMap.get(normalize(key)));
     }
 
     @Override
     public boolean contains(@NotNull String key) {
-        return byString.containsKey(normalize(key));
-    }
-
-    @Override
-    public boolean contains(@NotNull NamespacedKey key) {
-        return byKey.containsKey(key);
+        return actionMap.containsKey(normalize(key));
     }
 
     @Override
     public boolean contains(@NotNull Action<T> action) {
-        return byKey.containsValue(action);
+        return actionMap.containsValue(action);
     }
 
     @Override
     public @NotNull Collection<Action<T>> getAll() {
-        return Set.copyOf(byKey.values());
+        return new HashSet<>(actionMap.values());
     }
 
     @Override
     public @NotNull Map<String, Action<T>> getAllMapped() {
-        return Collections.unmodifiableMap(byString);
+        return new HashMap<>(actionMap);
     }
 
     @Override
     public @NotNull Collection<Action<T>> getAll(Predicate<Action<T>> filter) {
         Set<Action<T>> result = new HashSet<>();
 
-        for (Action<T> action : byKey.values()) {
+        for (Action<T> action : actionMap.values()) {
             if (filter.test(action)) {
                 result.add(action);
             }
@@ -125,17 +101,10 @@ public class SimpleActionRegistry<T> implements ActionRegistry<T> {
 
     @Override
     public int size() {
-        return byKey.size();
+        return new HashSet<>(actionMap.values()).size();
     }
 
     private String normalize(String input) {
-        String key = input.toLowerCase().trim();
-
-        if ((key.startsWith("[") && key.endsWith("]")) ||
-                (key.startsWith("(") && key.endsWith(")"))) {
-            key = key.substring(1, key.length() - 1);
-        }
-
-        return key;
+        return input.trim().toLowerCase();
     }
 }

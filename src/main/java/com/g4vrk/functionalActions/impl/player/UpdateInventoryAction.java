@@ -1,20 +1,18 @@
-package com.g4vrk.functionalActions.actions.impl.player;
+package com.g4vrk.functionalActions.impl.player;
 
-import com.g4vrk.functionalActions.actions.AbstractAction;
+import com.g4vrk.functionalActions.AbstractAction;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("deprecation")
 public class UpdateInventoryAction extends AbstractAction<Player> {
 
     public UpdateInventoryAction() {
-        super(new NamespacedKey("functionallib", "update-inventory"));
+        super("update-inventory");
     }
 
     @Override
-    public void execute(Player player, String args) {
-        if (player == null) return;
-
+    public void execute(@NotNull Player player, @NotNull String args) {
         player.updateInventory();
     }
 }

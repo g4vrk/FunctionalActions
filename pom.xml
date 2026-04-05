@@ -64,5 +64,13 @@
             <version>1.18.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.g4vrk</groupId>
+            <artifactId>FastTextFormatter</artifactId>
+            <version>1.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+
     </dependencies>
 </project>

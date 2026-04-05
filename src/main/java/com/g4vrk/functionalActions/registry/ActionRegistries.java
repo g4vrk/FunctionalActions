@@ -1,8 +1,8 @@
-package com.g4vrk.functionalActions.actions.registry;
+package com.g4vrk.functionalActions.registry;
 
-import com.g4vrk.functionalActions.actions.Action;
-import com.g4vrk.functionalActions.actions.defaults.DefaultActionRegistry;
-import com.g4vrk.functionalActions.actions.defaults.impl.PlayerActionRegistry;
+import com.g4vrk.functionalActions.Action;
+import com.g4vrk.functionalActions.defaults.DefaultActionRegistry;
+import com.g4vrk.functionalActions.defaults.impl.PlayerActionRegistry;
 
 import java.util.ArrayList;
 import java.util.Collection;

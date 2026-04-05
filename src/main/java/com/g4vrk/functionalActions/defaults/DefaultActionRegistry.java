@@ -1,6 +1,6 @@
-package com.g4vrk.functionalActions.actions.defaults;
+package com.g4vrk.functionalActions.defaults;
 
-import com.g4vrk.functionalActions.actions.Action;
+import com.g4vrk.functionalActions.Action;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;

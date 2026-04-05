@@ -1,20 +1,17 @@
-package com.g4vrk.functionalActions.actions;
+package com.g4vrk.functionalActions;
 
-import org.bukkit.Keyed;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
-public interface Action<T> extends Keyed {
+public interface Action<T> {
 
-    void execute(T context, String args);
+    @NotNull String getKey();
+
+    void execute(@NotNull T context, @NotNull String args);
 
     default @NotNull Collection<String> getAliases() {
-        return new ArrayList<>();
-    }
-
-    default boolean runAsync() {
-        return false;
+        return Collections.emptyList();
     }
 }

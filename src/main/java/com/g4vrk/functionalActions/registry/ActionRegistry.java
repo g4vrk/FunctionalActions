@@ -1,7 +1,6 @@
-package com.g4vrk.functionalActions.actions.registry;
+package com.g4vrk.functionalActions.registry;
 
-import com.g4vrk.functionalActions.actions.Action;
-import org.bukkit.NamespacedKey;
+import com.g4vrk.functionalActions.Action;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -25,11 +24,7 @@ public interface ActionRegistry<T> {
 
     @NotNull Optional<Action<T>> getAction(@NotNull String key);
 
-    @NotNull Optional<Action<T>> getAction(@NotNull NamespacedKey key);
-
     boolean contains(@NotNull String key);
-
-    boolean contains(@NotNull NamespacedKey key);
 
     boolean contains(@NotNull Action<T> action);
 

@@ -1,7 +1,8 @@
-package com.g4vrk.functionalActions.actions.defaults.impl;
+package com.g4vrk.functionalActions.defaults.impl;
 
-import com.g4vrk.functionalActions.actions.impl.player.ActionBarAction;
-import com.g4vrk.functionalActions.actions.impl.player.CloseMenuAction;
+import com.g4vrk.functionalActions.Action;
+import com.g4vrk.functionalActions.defaults.DefaultActionRegistry;
+import com.g4vrk.functionalActions.impl.player.*;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
