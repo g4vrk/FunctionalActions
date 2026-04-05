@@ -2,7 +2,6 @@ package com.g4vrk.functionalActions.impl.player;
 
 import com.g4vrk.functionalActions.AbstractAction;
 import com.g4vrk.functionalActions.util.SendUtil;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 

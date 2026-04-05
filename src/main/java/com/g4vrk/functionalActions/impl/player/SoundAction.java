@@ -8,6 +8,8 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.regex.Pattern;
+
 public class SoundAction extends AbstractAction<Player> {
 
     public SoundAction() {
@@ -40,11 +42,13 @@ public class SoundAction extends AbstractAction<Player> {
                 keyStr = soundStr.contains(":") ? soundStr : "minecraft:" + soundStr;
             }
 
+            //noinspection PatternValidation
             sound = Sound.sound(Key.key(keyStr), Sound.Source.MASTER, volume, pitch);
 
             SendUtil.playSound(player, sound);
 
         } catch (Throwable t) {
+            //noinspection CallToPrintStackTrace
             t.printStackTrace();
         }
     }

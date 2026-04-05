@@ -3,6 +3,7 @@ package com.g4vrk.functionalActions.defaults.impl;
 import com.g4vrk.functionalActions.Action;
 import com.g4vrk.functionalActions.defaults.DefaultActionRegistry;
 import com.g4vrk.functionalActions.impl.player.*;
+import com.g4vrk.functionalActions.impl.universal.ConsoleAction;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,7 +25,8 @@ public class PlayerActionRegistry implements DefaultActionRegistry<Player> {
                 new MessageAction(),
                 new SoundAction(),
                 new TitleAction(),
-                new UpdateInventoryAction()
+                new UpdateInventoryAction(),
+                new ConsoleAction()
         );
     }
 }

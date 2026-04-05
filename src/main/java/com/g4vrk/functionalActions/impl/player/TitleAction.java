@@ -4,7 +4,6 @@ import com.g4vrk.fastTextFormatter.TextFormatter;
 import com.g4vrk.functionalActions.AbstractAction;
 import com.g4vrk.functionalActions.util.SendUtil;
 import net.kyori.adventure.text.Component;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
