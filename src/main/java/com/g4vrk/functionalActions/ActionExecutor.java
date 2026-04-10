@@ -1,10 +1,11 @@
 package com.g4vrk.functionalActions;
 
 import com.g4vrk.functionalActions.registry.ActionRegistry;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.UnaryOperator;
 
 public final class ActionExecutor<T> {
@@ -12,26 +13,26 @@ public final class ActionExecutor<T> {
     private final ActionRegistry<T> registry;
     private final Logger logger;
 
-    public ActionExecutor(ActionRegistry<T> registry) {
+    public ActionExecutor(@NotNull ActionRegistry<T> registry, @NotNull Logger logger) {
         this.registry = registry;
-        this.logger = LoggerFactory.getLogger("ActionExecutor");
+        this.logger = logger;
     }
 
-    public void runActions(T context, List<String> actionList, UnaryOperator<String> preProcessor) {
+    public void runActions(@NotNull T context, @NotNull List<String> actionList, @NotNull UnaryOperator<String> preProcessor) {
         for (String actionStr : actionList) {
             executeSingle(context, preProcessor.apply(actionStr));
         }
     }
 
-    public void runActions(T context, List<String> actionList) {
+    public void runActions(@NotNull T context, @NotNull List<String> actionList) {
         runActions(context, actionList, UnaryOperator.identity());
     }
 
-    public void runAction(T context, String actionLine) {
+    public void runAction(@NotNull T context, @NotNull String actionLine) {
         executeSingle(context, actionLine);
     }
 
-    public ActionRegistry<T> getRegistry() {
+    public @NotNull ActionRegistry<T> getRegistry() {
         return registry;
     }
 
@@ -48,7 +49,7 @@ public final class ActionExecutor<T> {
         String key = normalizeKey(rawKey);
         String args = parts[1];
 
-        var optionalAction = registry.getAction(key);
+        Optional<Action<T>> optionalAction = registry.getAction(key);
 
         if (optionalAction.isEmpty()) {
             logger.error("Неизвестное действие: {}", rawKey);
