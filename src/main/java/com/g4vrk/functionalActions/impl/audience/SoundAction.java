@@ -1,23 +1,20 @@
-package com.g4vrk.functionalActions.impl.player;
+package com.g4vrk.functionalActions.impl.audience;
 
 import com.g4vrk.functionalActions.AbstractAction;
 import com.g4vrk.functionalActions.util.SendUtil;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
-import org.bukkit.NamespacedKey;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.regex.Pattern;
-
-public class SoundAction extends AbstractAction<Player> {
+public class SoundAction extends AbstractAction<Audience> {
 
     public SoundAction() {
         super("sound");
     }
 
     @Override
-    public void execute(@NotNull Player player, @NotNull String args) {
+    public void execute(@NotNull Audience audience, @NotNull String args) {
         if (args.isBlank()) return;
 
         String[] parts = args.split(";", 3);
@@ -45,7 +42,7 @@ public class SoundAction extends AbstractAction<Player> {
             //noinspection PatternValidation
             sound = Sound.sound(Key.key(keyStr), Sound.Source.MASTER, volume, pitch);
 
-            SendUtil.playSound(player, sound);
+            SendUtil.playSound(audience, sound);
 
         } catch (Throwable t) {
             //noinspection CallToPrintStackTrace

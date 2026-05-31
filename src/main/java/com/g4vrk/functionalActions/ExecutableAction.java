@@ -2,6 +2,7 @@ package com.g4vrk.functionalActions;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
 public record ExecutableAction<T>(Action<T> action, String args) {
@@ -17,7 +18,7 @@ public record ExecutableAction<T>(Action<T> action, String args) {
         action.execute(context, args);
     }
 
-    public void execute(@NotNull T context, @NotNull UnaryOperator<String> argsPreProcessor) {
+    public void execute(@NotNull T context, @NotNull Function<String, String> argsPreProcessor) {
         action.execute(context, argsPreProcessor.apply(args));
     }
 

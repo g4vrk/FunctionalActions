@@ -2,6 +2,7 @@ package com.g4vrk.functionalActions.parser.impl;
 
 import com.g4vrk.functionalActions.Action;
 import com.g4vrk.functionalActions.ExecutableAction;
+import com.g4vrk.functionalActions.list.ExecutableActionList;
 import com.g4vrk.functionalActions.parser.ActionParser;
 import com.g4vrk.functionalActions.registry.ActionRegistry;
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +21,7 @@ public class SimpleActionParser<T> implements ActionParser<T> {
     }
 
     @Override
-    public @NotNull Optional<ExecutableAction<T>> parse(@NotNull String input) {
+    public @NotNull Optional<ExecutableAction<? super T>> parse(@NotNull String input) {
         String trimmed = input.trim();
         if (trimmed.isEmpty()) return Optional.empty();
 
@@ -76,7 +77,7 @@ public class SimpleActionParser<T> implements ActionParser<T> {
     }
 
     @Override
-    public @NotNull Optional<ExecutableAction<T>> parse(
+    public @NotNull Optional<ExecutableAction<? super T>> parse(
             @NotNull String actionStr,
             @NotNull String args
     ) {
@@ -84,21 +85,21 @@ public class SimpleActionParser<T> implements ActionParser<T> {
     }
 
     @Override
-    public @NotNull Collection<ExecutableAction<T>> parseAll(@NotNull Collection<String> inputs) {
-        List<ExecutableAction<T>> result = new ArrayList<>(inputs.size());
+    public @NotNull ExecutableActionList<? super T> parseAll(@NotNull Collection<String> inputs) {
+        List<ExecutableAction<? super T>> result = new ArrayList<>(inputs.size());
 
         for (String input : inputs) {
             parse(input).ifPresent(result::add);
         }
 
-        return result;
+        return new ExecutableActionList<>(result);
     }
 
-    private @NotNull Optional<ExecutableAction<T>> resolve(
+    private @NotNull Optional<ExecutableAction<? super T>> resolve(
             @NotNull String key,
             @NotNull String args
     ) {
-        Optional<Action<T>> actionOpt = registry.getAction(key);
+        Optional<Action<? super T>> actionOpt = registry.getAction(key);
         return actionOpt.map(action -> new ExecutableAction<>(action, args));
     }
 }

@@ -49,14 +49,14 @@ public final class ActionExecutor<T> {
         String key = normalizeKey(rawKey);
         String args = parts[1];
 
-        Optional<Action<T>> optionalAction = registry.getAction(key);
+        Optional<Action<? super T>> optionalAction = registry.getAction(key);
 
         if (optionalAction.isEmpty()) {
             logger.error("Неизвестное действие: {}", rawKey);
             return;
         }
 
-        Action<T> action = optionalAction.get();
+        Action<? super T> action = optionalAction.get();
 
         action.execute(context, args);
     }

@@ -10,19 +10,19 @@ import java.util.function.Predicate;
 
 public class SimpleActionRegistry<T> implements ActionRegistry<T> {
 
-    private final Map<String, Action<T>> actionMap = new ConcurrentHashMap<>();
+    private final Map<String, Action<? super T>> actionMap = new ConcurrentHashMap<>();
 
     @Override
-    public void register(@NotNull Action<T> action) {
+    public void register(@NotNull Action<? super T> action) {
         register0(action);
     }
 
     @Override
-    public void registerAll(@NotNull Collection<Action<T>> actions) {
+    public void registerAll(@NotNull Collection<? extends Action<? super T>> actions) {
         actions.forEach(this::register);
     }
 
-    private void register0(Action<T> action) {
+    private void register0(Action<? super T> action) {
         registerKey(action.getKey(), action, false);
 
         for (String alias : action.getAliases()) {
@@ -30,7 +30,7 @@ public class SimpleActionRegistry<T> implements ActionRegistry<T> {
         }
     }
 
-    private void registerKey(String key, Action<T> action, boolean override) {
+    private void registerKey(String key, Action<? super T> action, boolean override) {
         String normalized = normalize(key);
 
         if (!override && actionMap.containsKey(normalized)) {
@@ -41,12 +41,12 @@ public class SimpleActionRegistry<T> implements ActionRegistry<T> {
     }
 
     @Override
-    public void override(@NotNull String key, @NotNull Action<T> action) {
+    public void override(@NotNull String key, @NotNull Action<? super T> action) {
         registerKey(key, action, true);
     }
 
     @Override
-    public void override(@NotNull Action<T> oldAction, @NotNull Action<T> newAction) {
+    public void override(@NotNull Action<? super T> oldAction, @NotNull Action<? super T> newAction) {
         unregister(oldAction);
         register(newAction);
     }
@@ -57,12 +57,12 @@ public class SimpleActionRegistry<T> implements ActionRegistry<T> {
     }
 
     @Override
-    public void unregister(@NotNull Action<T> action) {
+    public void unregister(@NotNull Action<? super T> action) {
         actionMap.entrySet().removeIf(e -> e.getValue() == action);
     }
 
     @Override
-    public @NotNull Optional<Action<T>> getAction(@NotNull String key) {
+    public @NotNull Optional<Action<? super T>> getAction(@NotNull String key) {
         return Optional.ofNullable(actionMap.get(normalize(key)));
     }
 
@@ -72,25 +72,25 @@ public class SimpleActionRegistry<T> implements ActionRegistry<T> {
     }
 
     @Override
-    public boolean contains(@NotNull Action<T> action) {
+    public boolean contains(@NotNull Action<? super T> action) {
         return actionMap.containsValue(action);
     }
 
     @Override
-    public @NotNull Collection<Action<T>> getAll() {
+    public @NotNull Collection<Action<? super T>> getAll() {
         return new HashSet<>(actionMap.values());
     }
 
     @Override
-    public @NotNull Map<String, Action<T>> getAllMapped() {
+    public @NotNull Map<String, Action<? super T>> getAllMapped() {
         return new HashMap<>(actionMap);
     }
 
     @Override
-    public @NotNull Collection<Action<T>> getAll(Predicate<Action<T>> filter) {
-        Set<Action<T>> result = new HashSet<>();
+    public @NotNull Collection<Action<? super T>> getAll(Predicate<Action<? super T>> filter) {
+        Set<Action<? super T>> result = new HashSet<>();
 
-        for (Action<T> action : actionMap.values()) {
+        for (Action<? super T> action : actionMap.values()) {
             if (filter.test(action)) {
                 result.add(action);
             }

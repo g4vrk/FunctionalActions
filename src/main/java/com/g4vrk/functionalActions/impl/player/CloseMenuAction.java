@@ -13,8 +13,6 @@ public class CloseMenuAction extends AbstractAction<Player> {
 
     @Override
     public void execute(@NotNull Player player, @NotNull String args) {
-        if (player == null) return;
-
         player.closeInventory();
     }
 }

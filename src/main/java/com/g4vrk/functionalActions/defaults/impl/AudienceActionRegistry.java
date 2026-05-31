@@ -6,30 +6,26 @@ import com.g4vrk.functionalActions.impl.audience.ActionBarAction;
 import com.g4vrk.functionalActions.impl.audience.MessageAction;
 import com.g4vrk.functionalActions.impl.audience.SoundAction;
 import com.g4vrk.functionalActions.impl.audience.TitleAction;
-import com.g4vrk.functionalActions.impl.player.*;
 import com.g4vrk.functionalActions.impl.universal.ConsoleAction;
-import org.bukkit.entity.Player;
+import net.kyori.adventure.audience.Audience;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.List;
 
-public class PlayerActionRegistry implements DefaultActionRegistry<Player> {
+public class AudienceActionRegistry implements DefaultActionRegistry<Audience> {
     @Override
-    public @NotNull Class<Player> getType() {
-        return Player.class;
+    public @NotNull Class<Audience> getType() {
+        return Audience.class;
     }
 
     @Override
-    public @NotNull Collection<Action<? super Player>> getActions() {
-        // todo: add more
+    public @NotNull Collection<Action<? super Audience>> getActions() {
         return List.of(
                 new ActionBarAction(),
-                new CloseMenuAction(),
                 new MessageAction(),
                 new SoundAction(),
                 new TitleAction(),
-                new UpdateInventoryAction(),
                 new ConsoleAction()
         );
     }

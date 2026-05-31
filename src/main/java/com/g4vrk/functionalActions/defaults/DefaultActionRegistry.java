@@ -9,5 +9,5 @@ public interface DefaultActionRegistry<T> {
 
     @NotNull Class<T> getType();
 
-    @NotNull Collection<Action<T>> getActions();
+    @NotNull Collection<Action<? super T>> getActions();
 }
