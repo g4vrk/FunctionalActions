@@ -7,7 +7,7 @@ import com.g4vrk.functionalActions.impl.audience.MessageAction;
 import com.g4vrk.functionalActions.impl.audience.SoundAction;
 import com.g4vrk.functionalActions.impl.audience.TitleAction;
 import com.g4vrk.functionalActions.impl.player.*;
-import com.g4vrk.functionalActions.impl.universal.ConsoleAction;
+import com.g4vrk.functionalActions.impl.universal.AsConsoleAction;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,7 +30,8 @@ public class PlayerActionRegistry implements DefaultActionRegistry<Player> {
                 new SoundAction(),
                 new TitleAction(),
                 new UpdateInventoryAction(),
-                new ConsoleAction()
+                new AsConsoleAction(),
+                new AsPlayerAction()
         );
     }
 }

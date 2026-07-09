@@ -2,6 +2,7 @@ package com.g4vrk.functionalActions.registry;
 
 import com.g4vrk.functionalActions.Action;
 import com.g4vrk.functionalActions.defaults.DefaultActionRegistry;
+import com.g4vrk.functionalActions.defaults.impl.AudienceActionRegistry;
 import com.g4vrk.functionalActions.defaults.impl.PlayerActionRegistry;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,6 +19,7 @@ public final class ActionRegistries {
 
     {
         registerProvider(new PlayerActionRegistry());
+        registerProvider(new AudienceActionRegistry());
     }
 
     public static <T> void registerProvider(

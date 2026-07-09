@@ -6,7 +6,7 @@ import com.g4vrk.functionalActions.impl.audience.ActionBarAction;
 import com.g4vrk.functionalActions.impl.audience.MessageAction;
 import com.g4vrk.functionalActions.impl.audience.SoundAction;
 import com.g4vrk.functionalActions.impl.audience.TitleAction;
-import com.g4vrk.functionalActions.impl.universal.ConsoleAction;
+import com.g4vrk.functionalActions.impl.universal.AsConsoleAction;
 import net.kyori.adventure.audience.Audience;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,7 +26,7 @@ public class AudienceActionRegistry implements DefaultActionRegistry<Audience> {
                 new MessageAction(),
                 new SoundAction(),
                 new TitleAction(),
-                new ConsoleAction()
+                new AsConsoleAction()
         );
     }
 }

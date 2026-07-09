@@ -4,12 +4,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.jetbrains.annotations.NotNull;
 
-public class ConsoleAction extends UncontextualAction {
+import java.util.List;
+
+public class AsConsoleAction extends UncontextualAction {
 
     private final Server server = Bukkit.getServer();
 
-    public ConsoleAction() {
-        super("console");
+    public AsConsoleAction() {
+        super("console", List.of("console-command", "command-as-console", "console-cmd"));
     }
 
     @Override
