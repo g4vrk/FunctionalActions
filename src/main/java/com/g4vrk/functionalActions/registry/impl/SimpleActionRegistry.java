@@ -3,7 +3,6 @@ package com.g4vrk.functionalActions.registry.impl;
 import com.g4vrk.functionalActions.Action;
 import com.g4vrk.functionalActions.registry.ActionRegistry;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,6 +33,22 @@ public class SimpleActionRegistry<T> implements ActionRegistry<T> {
         }
 
         actionMap.put(normalized, action);
+    }
+
+    @Override
+    public void register(
+            @NotNull Action<? super T> action,
+            @NotNull String @NotNull ... keys
+    ) {
+        if (keys.length == 0) {
+            throw new IllegalArgumentException("At least one key must be specified.");
+        }
+
+        for (final String key : keys) {
+
+            this.register(key, action);
+
+        }
     }
 
     @Override

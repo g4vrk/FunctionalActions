@@ -8,7 +8,15 @@ import java.util.Map;
 
 public interface ActionRegistry<T> {
 
-    void register(@NotNull String key, @NotNull Action<? super T> action);
+    void register(
+            @NotNull String key,
+            @NotNull Action<? super T> action
+    );
+
+    void register(
+            @NotNull Action<? super T> action,
+            @NotNull String @NotNull ... keys
+    );
 
     void unregister(@NotNull String key);
 
