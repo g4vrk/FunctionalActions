@@ -1,13 +1,11 @@
 package com.g4vrk.functionalActions.impl;
 
 import net.kyori.adventure.text.Component;
-import org.bukkit.entity.Player;
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
-
-import static org.bukkit.Bukkit.getServer;
 
 public class BroadcastMessageAction extends UncontextualAction {
 
@@ -24,9 +22,7 @@ public class BroadcastMessageAction extends UncontextualAction {
 
         final Component text = args == null || args.isBlank() ? Component.empty() : textMapper.apply(args);
 
-        for (final Player player : getServer().getOnlinePlayers()) {
-            player.sendMessage(text);
-        }
+        Bukkit.getServer().broadcast(text);
 
     }
 }

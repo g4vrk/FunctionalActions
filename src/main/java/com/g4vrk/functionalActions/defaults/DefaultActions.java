@@ -33,10 +33,10 @@ public final class DefaultActions {
                 "actionbar", "bar");
 
         registry.register(new TitleAction(splitter, textMapper),
-                "title");
+                "title", "show-title");
 
         registry.register(new SoundAction(splitter),
-                "sound");
+                "sound", "play-sound");
 
         registry.register(new BroadcastMessageAction(textMapper),
                 "broadcast", "bc");
