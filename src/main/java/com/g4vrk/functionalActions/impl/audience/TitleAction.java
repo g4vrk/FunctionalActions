@@ -1,30 +1,39 @@
 package com.g4vrk.functionalActions.impl.audience;
 
-import com.g4vrk.fastTextFormatter.TextFormatter;
-import com.g4vrk.functionalActions.AbstractAction;
-import com.g4vrk.functionalActions.util.SendUtil;
+import com.g4vrk.functionalActions.Action;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import org.bukkit.entity.Player;
+import net.kyori.adventure.title.Title;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class TitleAction extends AbstractAction<Audience> {
+import java.util.function.Function;
 
-    private final TextFormatter textFormatter = TextFormatter.textFormatter();
+public class TitleAction implements Action<Audience> {
 
-    public TitleAction() {
-        super("title");
+    private final String splitter;
+
+    private final Function<String, Component> textMapper;
+
+    public TitleAction(
+            @NotNull String splitter,
+            @NotNull Function<String, Component> textMapper
+    ) {
+        this.splitter = splitter;
+        this.textMapper = textMapper;
     }
 
     @Override
-    public void execute(@NotNull Audience audience, @NotNull String args) {
-        if (args.isBlank()) return;
+    public void execute(@NotNull Audience audience, @Nullable String args) {
+        if (args == null || args.isBlank()) return;
 
-        String[] parts = args.split(";");
+        final String[] parts = args.split(splitter);
 
-        Component title = textFormatter.format(parts[0]);
-        Component subtitle = parts.length > 1 ? textFormatter.format(parts[1]) : Component.empty();
+        if (parts.length < 1) return;
 
-        SendUtil.sendTitle(audience, title, subtitle, 3, 1, 3);
+        Component title = textMapper.apply(parts[0]);
+        Component subtitle = parts.length > 1 ? textMapper.apply(parts[1]) : Component.empty();
+
+        audience.showTitle(Title.title(title, subtitle));
     }
 }
