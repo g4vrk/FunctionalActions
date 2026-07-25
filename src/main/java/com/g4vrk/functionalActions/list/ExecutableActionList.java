@@ -14,6 +14,7 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 public class ExecutableActionList<T> implements Iterable<ExecutableAction<? super T>> {
+
     private final List<ExecutableAction<? super T>> actions;
 
     public ExecutableActionList(
@@ -88,4 +89,5 @@ public class ExecutableActionList<T> implements Iterable<ExecutableAction<? supe
             consumer.accept(action);
         }
     }
+
 }

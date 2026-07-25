@@ -1,34 +1,26 @@
 package com.g4vrk.functionalActions;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
-import java.util.function.UnaryOperator;
 
-public record ExecutableAction<T>(Action<T> action, String args) {
-    public ExecutableAction(
-            @NotNull Action<T> action,
-            @NotNull String args
+public record ExecutableAction<T>(
+        @NotNull Action<T> action,
+        @Nullable String args
+) {
+
+    public void execute(
+            final @NotNull T context
     ) {
-        this.action = action;
-        this.args = args;
-    }
-
-    public void execute(@NotNull T context) {
         action.execute(context, args);
     }
 
-    public void execute(@NotNull T context, @NotNull Function<String, String> argsPreProcessor) {
-        action.execute(context, argsPreProcessor.apply(args));
+    public void execute(
+            final @NotNull T context,
+            final @NotNull Function<String, String> preProcessor
+    ) {
+        action.execute(context, preProcessor.apply(args));
     }
 
-    @Override
-    public @NotNull Action<T> action() {
-        return action;
-    }
-
-    @Override
-    public @NotNull String args() {
-        return args;
-    }
 }

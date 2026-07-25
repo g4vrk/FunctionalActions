@@ -1,27 +1,31 @@
 package com.g4vrk.functionalActions.impl.audience;
 
-import com.g4vrk.functionalActions.AbstractAction;
-import com.g4vrk.functionalActions.util.SendUtil;
+import com.g4vrk.functionalActions.Action;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class SoundAction extends AbstractAction<Audience> {
+public class SoundAction implements Action<Audience> {
 
-    public SoundAction() {
-        super("sound");
+    private final String splitter;
+
+    public SoundAction(
+            @NotNull String splitter
+    ) {
+        this.splitter = splitter;
     }
 
     @Override
-    public void execute(@NotNull Audience audience, @NotNull String args) {
-        if (args.isBlank()) return;
+    public void execute(@NotNull Audience audience, @Nullable String args) {
+        if (args == null || args.isBlank()) return;
 
-        String[] parts = args.split(";", 3);
+        final String[] parts = args.split(splitter, 3);
 
-        String soundStr = parts.length > 0 ? parts[0].trim() : "";
-        float volume = parts.length > 1 ? parseFloat(parts[1]) : 1f;
-        float pitch = parts.length > 2 ? parseFloat(parts[2]) : 1f;
+        final String soundStr = parts.length > 0 ? parts[0].trim() : "";
+        final float volume = parts.length > 1 ? parseFloat(parts[1]) : 1f;
+        final float pitch = parts.length > 2 ? parseFloat(parts[2]) : 1f;
 
         try {
             Sound sound;
@@ -42,11 +46,11 @@ public class SoundAction extends AbstractAction<Audience> {
             //noinspection PatternValidation
             sound = Sound.sound(Key.key(keyStr), Sound.Source.MASTER, volume, pitch);
 
-            SendUtil.playSound(audience, sound);
+            audience.playSound(sound);
 
-        } catch (Throwable t) {
+        } catch (final Throwable th) {
             //noinspection CallToPrintStackTrace
-            t.printStackTrace();
+            th.printStackTrace();
         }
     }
 

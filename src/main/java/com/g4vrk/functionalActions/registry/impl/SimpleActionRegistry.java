@@ -2,38 +2,33 @@ package com.g4vrk.functionalActions.registry.impl;
 
 import com.g4vrk.functionalActions.Action;
 import com.g4vrk.functionalActions.registry.ActionRegistry;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Predicate;
 
 public class SimpleActionRegistry<T> implements ActionRegistry<T> {
 
-    private final Map<String, Action<? super T>> actionMap = new ConcurrentHashMap<>();
+    private final boolean replaceIfExists;
 
-    @Override
-    public void register(@NotNull Action<? super T> action) {
-        register0(action);
+    private final Map<String, Action<? super T>> actionMap = new Object2ObjectOpenHashMap<>();
+
+    public SimpleActionRegistry() {
+        this(false);
+    }
+
+    public SimpleActionRegistry(
+            boolean replaceIfExists
+    ) {
+        this.replaceIfExists = replaceIfExists;
     }
 
     @Override
-    public void registerAll(@NotNull Collection<? extends Action<? super T>> actions) {
-        actions.forEach(this::register);
-    }
+    public void register(@NotNull String key, @NotNull Action<? super T> action) {
+        final String normalized = normalize(key);
 
-    private void register0(Action<? super T> action) {
-        registerKey(action.getKey(), action, false);
-
-        for (String alias : action.getAliases()) {
-            registerKey(alias, action, false);
-        }
-    }
-
-    private void registerKey(String key, Action<? super T> action, boolean override) {
-        String normalized = normalize(key);
-
-        if (!override && actionMap.containsKey(normalized)) {
+        if (actionMap.containsKey(normalized) && !replaceIfExists) {
             throw new IllegalStateException("Key '" + normalized + "' already registered by " + actionMap.get(normalized).getClass().getSimpleName());
         }
 
@@ -41,14 +36,19 @@ public class SimpleActionRegistry<T> implements ActionRegistry<T> {
     }
 
     @Override
-    public void override(@NotNull String key, @NotNull Action<? super T> action) {
-        registerKey(key, action, true);
-    }
+    public void register(
+            @NotNull Action<? super T> action,
+            @NotNull String @NotNull ... keys
+    ) {
+        if (keys.length == 0) {
+            throw new IllegalArgumentException("At least one key must be specified.");
+        }
 
-    @Override
-    public void override(@NotNull Action<? super T> oldAction, @NotNull Action<? super T> newAction) {
-        unregister(oldAction);
-        register(newAction);
+        for (final String key : keys) {
+
+            this.register(key, action);
+
+        }
     }
 
     @Override
@@ -57,13 +57,8 @@ public class SimpleActionRegistry<T> implements ActionRegistry<T> {
     }
 
     @Override
-    public void unregister(@NotNull Action<? super T> action) {
-        actionMap.entrySet().removeIf(e -> e.getValue() == action);
-    }
-
-    @Override
-    public @NotNull Optional<Action<? super T>> getAction(@NotNull String key) {
-        return Optional.ofNullable(actionMap.get(normalize(key)));
+    public @Nullable Action<? super T> getAction(@NotNull String key) {
+        return actionMap.get(normalize(key));
     }
 
     @Override
@@ -77,34 +72,16 @@ public class SimpleActionRegistry<T> implements ActionRegistry<T> {
     }
 
     @Override
-    public @NotNull Collection<Action<? super T>> getAll() {
-        return new HashSet<>(actionMap.values());
-    }
-
-    @Override
-    public @NotNull Map<String, Action<? super T>> getAllMapped() {
-        return new HashMap<>(actionMap);
-    }
-
-    @Override
-    public @NotNull Collection<Action<? super T>> getAll(Predicate<Action<? super T>> filter) {
-        Set<Action<? super T>> result = new HashSet<>();
-
-        for (Action<? super T> action : actionMap.values()) {
-            if (filter.test(action)) {
-                result.add(action);
-            }
-        }
-
-        return result;
+    public @NotNull Map<String, Action<? super T>> all() {
+        return new Object2ObjectOpenHashMap<>(actionMap);
     }
 
     @Override
     public int size() {
-        return new HashSet<>(actionMap.values()).size();
+        return actionMap.size();
     }
 
-    private String normalize(String input) {
+    private @NotNull String normalize(@NotNull String input) {
         return input.trim().toLowerCase();
     }
 }

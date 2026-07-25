@@ -1,23 +1,27 @@
 package com.g4vrk.functionalActions.impl.audience;
 
-import com.g4vrk.functionalActions.AbstractAction;
-import com.g4vrk.functionalActions.util.SendUtil;
+import com.g4vrk.functionalActions.Action;
 import net.kyori.adventure.audience.Audience;
-import org.bukkit.entity.Player;
+import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import java.util.function.Function;
 
-public class MessageAction extends AbstractAction<Audience> {
+public class MessageAction implements Action<Audience> {
 
-    public MessageAction() {
-        super("message", List.of("msg"));
+    private final Function<String, Component> textMapper;
+
+    public MessageAction(
+            @NotNull Function<String, Component> textMapper
+    ) {
+        this.textMapper = textMapper;
     }
 
     @Override
-    public void execute(@NotNull Audience audience, @NotNull String args) {
-        if (args.isBlank()) return;
+    public void execute(@NotNull Audience audience, @Nullable String args) {
+        if (args == null || args.isBlank()) audience.sendMessage(Component.empty());
 
-        SendUtil.sendMessage(audience, args);
+        audience.sendMessage(textMapper.apply(args));
     }
 }

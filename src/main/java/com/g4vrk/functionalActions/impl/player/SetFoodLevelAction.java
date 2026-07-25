@@ -5,11 +5,15 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class UpdateInventoryAction implements Action<Player> {
+public final class SetFoodLevelAction implements Action<Player> {
 
     @Override
     public void execute(@NotNull Player player, @Nullable String args) {
-        player.updateInventory();
-    }
 
+        if (args == null || args.isBlank()) return;
+
+        final int food = Integer.parseInt(args);
+
+        player.setFoodLevel(Math.max(0, Math.min(20, food)));
+    }
 }

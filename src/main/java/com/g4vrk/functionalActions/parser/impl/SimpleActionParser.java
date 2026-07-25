@@ -5,25 +5,41 @@ import com.g4vrk.functionalActions.ExecutableAction;
 import com.g4vrk.functionalActions.list.ExecutableActionList;
 import com.g4vrk.functionalActions.parser.ActionParser;
 import com.g4vrk.functionalActions.registry.ActionRegistry;
+import it.unimi.dsi.fastutil.Pair;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectObjectImmutablePair;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class SimpleActionParser<T> implements ActionParser<T> {
 
     private final ActionRegistry<T> registry;
 
-    public SimpleActionParser(@NotNull ActionRegistry<T> registry) {
+    private final Map<String, Pair<String, String>> cache = new Object2ObjectOpenHashMap<>();
+
+    public SimpleActionParser(
+            @NotNull ActionRegistry<T> registry
+    ) {
         this.registry = registry;
     }
 
     @Override
-    public @NotNull Optional<ExecutableAction<? super T>> parse(@NotNull String input) {
+    public ExecutableAction<? super T> parse(@NotNull String input) {
         String trimmed = input.trim();
-        if (trimmed.isEmpty()) return Optional.empty();
+
+        if (trimmed.isEmpty()) return null;
+
+        final Pair<String, String> cachedPair = cache.get(trimmed);
+
+        if (cachedPair != null) {
+            return resolve(cachedPair.key(), cachedPair.value());
+        }
 
         String key;
         String args;
@@ -42,7 +58,7 @@ public class SimpleActionParser<T> implements ActionParser<T> {
             };
 
             int closeIndex = trimmed.indexOf(closing, 1);
-            if (closeIndex == -1) return Optional.empty();
+            if (closeIndex == -1) return null;
 
             key = trimmed.substring(1, closeIndex).trim();
             index = closeIndex + 1;
@@ -73,11 +89,13 @@ public class SimpleActionParser<T> implements ActionParser<T> {
 
         args = (index >= len) ? "" : trimmed.substring(index).trim();
 
+        cache.put(trimmed, new ObjectObjectImmutablePair<>(key, args));
+
         return resolve(key, args);
     }
 
     @Override
-    public @NotNull Optional<ExecutableAction<? super T>> parse(
+    public ExecutableAction<? super T> parse(
             @NotNull String actionStr,
             @NotNull String args
     ) {
@@ -86,20 +104,27 @@ public class SimpleActionParser<T> implements ActionParser<T> {
 
     @Override
     public @NotNull ExecutableActionList<? super T> parseAll(@NotNull Collection<String> inputs) {
-        List<ExecutableAction<? super T>> result = new ArrayList<>(inputs.size());
+        final List<ExecutableAction<? super T>> result = new ObjectArrayList<>(inputs.size());
 
-        for (String input : inputs) {
-            parse(input).ifPresent(result::add);
+        for (final String input : inputs) {
+            final ExecutableAction<? super T> parsed = parse(input);
+
+            if (parsed != null) result.add(parsed);
         }
 
         return new ExecutableActionList<>(result);
     }
 
-    private @NotNull Optional<ExecutableAction<? super T>> resolve(
+    private @Nullable ExecutableAction<? super T> resolve(
             @NotNull String key,
             @NotNull String args
     ) {
-        Optional<Action<? super T>> actionOpt = registry.getAction(key);
-        return actionOpt.map(action -> new ExecutableAction<>(action, args));
+
+        final Action<? super T> action = registry.getAction(key);
+
+        if (action == null) return null;
+
+        return new ExecutableAction<>(action, args);
+
     }
 }
