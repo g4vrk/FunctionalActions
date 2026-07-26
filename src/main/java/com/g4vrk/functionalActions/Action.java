@@ -4,8 +4,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @FunctionalInterface
-public interface Action<T> {
+public interface Action<C> {
 
-    void execute(@NotNull T context, @Nullable String args);
+    void execute(@NotNull C context, @Nullable String args);
 
 }
