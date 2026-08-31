@@ -18,14 +18,14 @@ import java.util.function.Function;
 
 public final class DefaultActions {
 
-    private DefaultActions() {
-    }
+    private DefaultActions() {}
 
     private static void registerCommon(
             final @NotNull ActionRegistry<? extends Audience> registry,
             final @NotNull Function<String, Component> textMapper,
             final @NotNull String splitter
     ) {
+
         registry.register(new MessageAction(textMapper),
                 "message", "msg");
 
@@ -49,14 +49,16 @@ public final class DefaultActions {
 
         registry.register(new ConsoleCommandAction(),
                 "console-command", "console", "cmd");
+
     }
 
     public static final class Player {
 
-        public void registerDefaults(
-                @NotNull ActionRegistry<? extends org.bukkit.entity.Player> registry,
-                @NotNull Function<String, Component> textMapper,
-                @NotNull String splitter
+        public static void registerDefaults(
+                final @NotNull ActionRegistry<? extends org.bukkit.entity.Player> registry,
+                final @NotNull Function<String, Component> textMapper,
+                final @NotNull String splitter,
+                final @NotNull Function<String, Long> tickDurationParser
         ) {
             registerCommon(registry, textMapper, splitter);
 
@@ -66,7 +68,7 @@ public final class DefaultActions {
             registry.register(new TeleportAction(splitter),
                     "teleport", "tp");
 
-            registry.register(new PotionEffectAction(),
+            registry.register(new PotionEffectAction(tickDurationParser),
                     "effect", "potion");
 
             registry.register(new SetHealthAction(),
@@ -84,7 +86,7 @@ public final class DefaultActions {
             registry.register(new SetVelocityAction(),
                     "velocity", "vel", "set-velocity");
 
-            registry.register(new SetFireAction(),
+            registry.register(new SetFireAction(tickDurationParser),
                     "fire", "burn", "set-fire", "set-fire-time");
 
             registry.register(new UpdateInventoryAction(),
@@ -98,12 +100,14 @@ public final class DefaultActions {
 
     public static final class Adventure {
 
-        public void registerDefaults(
-                @NotNull ActionRegistry<Audience> registry,
-                @NotNull Function<String, Component> textMapper,
-                @NotNull String splitter
+        public static void registerDefaults(
+                final @NotNull ActionRegistry<Audience> registry,
+                final @NotNull Function<String, Component> textMapper,
+                final @NotNull String splitter
         ) {
+
             registerCommon(registry, textMapper, splitter);
+
         }
 
     }
