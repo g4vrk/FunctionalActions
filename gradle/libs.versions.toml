@@ -1,5 +1,5 @@
 [versions]
-paper-api = "1.18.2-R0.1-SNAPSHOT"
+paper-api = "26.2.build.119-stable"
 shadow = "9.6.1"
 
 [libraries]
