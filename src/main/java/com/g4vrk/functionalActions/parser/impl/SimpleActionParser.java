@@ -18,10 +18,11 @@ public class SimpleActionParser<T> implements ActionParser<T> {
 
     private final ActionRegistry<T> registry;
 
-    private final Map<String, Map.Entry<String, String>> cache = new Object2ObjectOpenHashMap<>();
+    private final Map<String, Map.Entry<String, String>> inputCache = new Object2ObjectOpenHashMap<>();
+    private final Map<Map.Entry<String, String>, ExecutableAction<? super T>> actionCache = new Object2ObjectOpenHashMap<>();
 
     public SimpleActionParser(
-            @NotNull ActionRegistry<T> registry
+            final @NotNull ActionRegistry<T> registry
     ) {
         this.registry = registry;
     }
@@ -35,10 +36,10 @@ public class SimpleActionParser<T> implements ActionParser<T> {
 
         if (trimmed.isEmpty()) return null;
 
-        final Map.Entry<String, String> cachedPair = cache.get(trimmed);
+        final Map.Entry<String, String> cached = inputCache.get(trimmed);
 
-        if (cachedPair != null) {
-            return resolve(cachedPair.getKey(), cachedPair.getValue());
+        if (cached != null) {
+            return resolve(cached.getKey(), cached.getValue());
         }
 
         final String key;
@@ -95,7 +96,7 @@ public class SimpleActionParser<T> implements ActionParser<T> {
 
         args = (index >= len) ? "" : trimmed.substring(index).trim();
 
-        cache.put(trimmed, Map.entry(key, args));
+        inputCache.put(trimmed, Map.entry(key, args));
 
         return resolve(key, args);
 
@@ -106,7 +107,9 @@ public class SimpleActionParser<T> implements ActionParser<T> {
             @NotNull String actionStr,
             @NotNull String args
     ) {
+
         return resolve(actionStr.trim(), args.trim());
+
     }
 
     @Override
@@ -131,11 +134,23 @@ public class SimpleActionParser<T> implements ActionParser<T> {
             final @NotNull String args
     ) {
 
+        final Map.Entry<String, String> cacheKey = Map.entry(key, args);
+
+        final ExecutableAction<? super T> cached = actionCache.get(cacheKey);
+
+        if (cached != null) {
+            return cached;
+        }
+
         final Action<? super T> action = registry.getAction(key);
 
         if (action == null) return null;
 
-        return new ExecutableAction<>(action, args);
+        final ExecutableAction<? super T> result = new ExecutableAction<>(action, args);
+
+        actionCache.put(cacheKey, result);
+
+        return result;
 
     }
 }
