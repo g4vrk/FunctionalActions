@@ -9,7 +9,7 @@ plugins {
 
 group = "com.g4vrk"
 
-val baseVersion = "2.1.0"
+val baseVersion = "2.1.1"
 version = VersionUtility.version(project, baseVersion)
 
 description = "Configurable action framework for Bukkit/Paper plugins."
