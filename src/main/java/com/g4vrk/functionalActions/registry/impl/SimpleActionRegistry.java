@@ -6,7 +6,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Map;
 
 public class SimpleActionRegistry<T> implements ActionRegistry<T> {
 
