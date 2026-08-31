@@ -5,7 +5,7 @@
 [![Build](https://github.com/g4vrk/FunctionalActions/actions/workflows/build.yml/badge.svg)](https://github.com/g4vrk/FunctionalActions/actions/workflows/build.yml)
 [![Java](https://img.shields.io/badge/Java-17+-orange)](.)
 [![Paper](https://img.shields.io/badge/Paper-1.18.2+-blue)](.)
-[![Version](https://img.shields.io/badge/version-2.1.0-informational)](.)
+[![Version](https://img.shields.io/badge/version-2.1.1-informational)](.)
 [![JitPack](https://jitpack.io/v/g4vrk/FunctionalActions.svg)](https://jitpack.io/#g4vrk/FunctionalActions)
 [![License](https://img.shields.io/github/license/g4vrk/FunctionalActions)](LICENSE)
 
@@ -39,7 +39,7 @@ repositories {
 
 ```kotlin
 dependencies {
-    implementation("com.github.g4vrk:FunctionalActions:2.1.0")
+    implementation("com.github.g4vrk:FunctionalActions:2.1.1")
 }
 ```
 
@@ -53,7 +53,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.g4vrk:FunctionalActions:2.1.0'
+    implementation 'com.github.g4vrk:FunctionalActions:2.1.1'
 }
 ```
 
@@ -73,7 +73,7 @@ dependencies {
 <dependency>
     <groupId>com.github.g4vrk</groupId>
     <artifactId>FunctionalActions</artifactId>
-    <version>2.1.0</version>
+    <version>2.1.1</version>
 </dependency>
 ```
 
@@ -83,7 +83,7 @@ dependencies {
 > Для стабильных сборок используйте тег релиза. Если нужен последний коммит из `master`, замените версию на `master-SNAPSHOT`.
 
 > [!IMPORTANT]
-> JitPack собирает библиотеку прямо из GitHub. Перед использованием `2.1.0` в репозитории должен существовать соответствующий Git-тег/релиз.
+> JitPack собирает библиотеку прямо из GitHub. Перед использованием `2.1.1` в репозитории должен существовать соответствующий Git-тег/релиз.
 
 ---
 

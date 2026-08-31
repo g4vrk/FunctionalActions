@@ -5,7 +5,7 @@
 [![Build](https://github.com/g4vrk/FunctionalActions/actions/workflows/build.yml/badge.svg)](https://github.com/g4vrk/FunctionalActions/actions/workflows/build.yml)
 [![Java](https://img.shields.io/badge/Java-17+-orange)](.)
 [![Paper](https://img.shields.io/badge/Paper-1.18.2+-blue)](.)
-[![Version](https://img.shields.io/badge/version-2.1.0-informational)](.)
+[![Version](https://img.shields.io/badge/version-2.1.1-informational)](.)
 [![JitPack](https://jitpack.io/v/g4vrk/FunctionalActions.svg)](https://jitpack.io/#g4vrk/FunctionalActions)
 [![License](https://img.shields.io/github/license/g4vrk/FunctionalActions)](LICENSE)
 
@@ -39,7 +39,7 @@ Then add FunctionalActions:
 
 ```kotlin
 dependencies {
-    implementation("com.github.g4vrk:FunctionalActions:2.1.0")
+    implementation("com.github.g4vrk:FunctionalActions:2.1.1")
 }
 ```
 
@@ -53,7 +53,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.g4vrk:FunctionalActions:2.1.0'
+    implementation 'com.github.g4vrk:FunctionalActions:2.1.1'
 }
 ```
 
@@ -73,7 +73,7 @@ dependencies {
 <dependency>
     <groupId>com.github.g4vrk</groupId>
     <artifactId>FunctionalActions</artifactId>
-    <version>2.1.0</version>
+    <version>2.1.1</version>
 </dependency>
 ```
 
@@ -83,7 +83,7 @@ dependencies {
 > Pin a release tag for reproducible builds. To use the latest commit from `master`, replace the version with `master-SNAPSHOT`.
 
 > [!IMPORTANT]
-> JitPack builds the library directly from GitHub. The matching Git tag/release must exist before `2.1.0` can be resolved.
+> JitPack builds the library directly from GitHub. The matching Git tag/release must exist before `2.1.1` can be resolved.
 
 ---
 
