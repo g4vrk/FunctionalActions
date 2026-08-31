@@ -2,6 +2,7 @@ import util.VersionUtility
 
 plugins {
     `java-library`
+    `maven-publish`
     alias(libs.plugins.shadow)
 }
 
@@ -77,3 +78,27 @@ tasks {
 }
 
 defaultTasks("clean", "build")
+
+publishing {
+
+    publications {
+
+        create<MavenPublication>("maven") {
+
+            groupId = System.getenv("GROUP") ?: project.group.toString()
+            artifactId = System.getenv("ARTIFACT") ?: rootProject.name
+            version = System.getenv("VERSION") ?: project.version.toString()
+
+            artifact(tasks.named("shadowJar"))
+            artifact(tasks.named("sourcesJar"))
+
+            pom {
+                name.set(rootProject.name)
+                description.set(project.description)
+            }
+
+        }
+
+    }
+
+}
