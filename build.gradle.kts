@@ -1,3 +1,5 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.gradle.kotlin.dsl.named
 import util.VersionUtility
 
 plugins {
@@ -89,8 +91,10 @@ publishing {
             artifactId = System.getenv("ARTIFACT") ?: rootProject.name
             version = System.getenv("VERSION") ?: project.version.toString()
 
-            artifact(tasks.named("shadowJar"))
-            artifact(tasks.named("sourcesJar"))
+            artifact(tasks.named<ShadowJar>("shadowJar")) {
+                classifier = ""
+            }
+            artifact(tasks.named<Jar>("sourcesJar"))
 
             pom {
                 name.set(rootProject.name)
