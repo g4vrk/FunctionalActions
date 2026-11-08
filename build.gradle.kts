@@ -9,10 +9,10 @@ plugins {
 }
 
 
-group = "com.g4vrk"
+group = System.getenv("GROUP") ?: "com.g4vrk"
 
 val baseVersion = "2.1.2"
-version = VersionUtility.version(project, baseVersion)
+version = System.getenv("VERSION") ?: VersionUtility.version(project, baseVersion)
 
 description = "Configurable action framework for Bukkit/Paper plugins."
 
@@ -33,6 +33,10 @@ repositories {
 dependencies {
 
     compileOnly(libs.paper.api)
+    testImplementation(libs.paper.api)
+    testImplementation("org.junit.jupiter:junit-jupiter:6.1.3")
+    testImplementation("net.kyori:adventure-api:4.10.0")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.1.3")
 
 }
 
@@ -106,3 +110,5 @@ publishing {
     }
 
 }
+
+tasks.test { useJUnitPlatform() }

@@ -2,7 +2,7 @@ package com.g4vrk.functionalActions.registry.impl;
 
 import com.g4vrk.functionalActions.Action;
 import com.g4vrk.functionalActions.registry.ActionRegistry;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,7 +12,7 @@ public class SimpleActionRegistry<T> implements ActionRegistry<T> {
 
     private final boolean replaceIfExists;
 
-    private final Map<String, Action<? super T>> actionMap = new Object2ObjectOpenHashMap<>();
+    private final Map<String, Action<? super T>> actionMap = new java.util.concurrent.ConcurrentHashMap<>();
 
     public SimpleActionRegistry() {
         this(false);
@@ -28,11 +28,12 @@ public class SimpleActionRegistry<T> implements ActionRegistry<T> {
     public void register(@NotNull String key, @NotNull Action<? super T> action) {
         final String normalized = normalize(key);
 
-        if (actionMap.containsKey(normalized) && !replaceIfExists) {
-            throw new IllegalStateException("Key '" + normalized + "' already registered by " + actionMap.get(normalized).getClass().getSimpleName());
+        java.util.Objects.requireNonNull(action, "action");
+        if (replaceIfExists) {
+            actionMap.put(normalized, action);
+        } else if (actionMap.putIfAbsent(normalized, action) != null) {
+            throw new IllegalStateException("Key '" + normalized + "' already registered");
         }
-
-        actionMap.put(normalized, action);
     }
 
     @Override
@@ -73,7 +74,7 @@ public class SimpleActionRegistry<T> implements ActionRegistry<T> {
 
     @Override
     public @NotNull Map<String, Action<? super T>> all() {
-        return new Object2ObjectOpenHashMap<>(actionMap);
+        return Map.copyOf(actionMap);
     }
 
     @Override
@@ -82,6 +83,6 @@ public class SimpleActionRegistry<T> implements ActionRegistry<T> {
     }
 
     private @NotNull String normalize(@NotNull String input) {
-        return input.trim().toLowerCase();
+        return input.trim().toLowerCase(java.util.Locale.ROOT);
     }
 }

@@ -5,8 +5,8 @@ import com.g4vrk.functionalActions.ExecutableAction;
 import com.g4vrk.functionalActions.list.ExecutableActionList;
 import com.g4vrk.functionalActions.parser.ActionParser;
 import com.g4vrk.functionalActions.registry.ActionRegistry;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,8 +18,15 @@ public class SimpleActionParser<T> implements ActionParser<T> {
 
     private final ActionRegistry<T> registry;
 
-    private final Map<String, Map.Entry<String, String>> inputCache = new Object2ObjectOpenHashMap<>();
-    private final Map<Map.Entry<String, String>, ExecutableAction<? super T>> actionCache = new Object2ObjectOpenHashMap<>();
+    // Cache syntax only. Resolve the current action on every parse, so replacement and
+    // removal are immediately visible without retaining extension handlers in a cache.
+    private final Map<String, Map.Entry<String, String>> inputCache =
+            java.util.Collections.synchronizedMap(new java.util.LinkedHashMap<>(128, .75f, true) {
+                @Override
+                protected boolean removeEldestEntry(Map.Entry<String, Map.Entry<String, String>> entry) {
+                    return size() > 4096;
+                }
+            });
 
     public SimpleActionParser(
             final @NotNull ActionRegistry<T> registry
@@ -115,7 +122,7 @@ public class SimpleActionParser<T> implements ActionParser<T> {
     @Override
     public @NotNull ExecutableActionList<? super T> parseAll(@NotNull Collection<String> inputs) {
 
-        final List<ExecutableAction<? super T>> result = new ObjectArrayList<>(inputs.size());
+        final List<ExecutableAction<? super T>> result = new java.util.ArrayList<>(inputs.size());
 
         for (final String input : inputs) {
 
@@ -134,21 +141,12 @@ public class SimpleActionParser<T> implements ActionParser<T> {
             final @NotNull String args
     ) {
 
-        final Map.Entry<String, String> cacheKey = Map.entry(key, args);
-
-        final ExecutableAction<? super T> cached = actionCache.get(cacheKey);
-
-        if (cached != null) {
-            return cached;
-        }
-
         final Action<? super T> action = registry.getAction(key);
 
         if (action == null) return null;
 
         final ExecutableAction<? super T> result = new ExecutableAction<>(action, args);
 
-        actionCache.put(cacheKey, result);
 
         return result;
 

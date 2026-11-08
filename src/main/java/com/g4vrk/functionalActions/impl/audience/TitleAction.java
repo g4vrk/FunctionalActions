@@ -13,14 +13,24 @@ public class TitleAction implements Action<Audience> {
 
     private final String splitter;
 
-    private final Function<String, Component> textMapper;
+    private final java.util.function.BiFunction<Audience, String, Component> textMapper;
 
     public TitleAction(
             @NotNull String splitter,
             @NotNull Function<String, Component> textMapper
     ) {
         this.splitter = splitter;
-        this.textMapper = textMapper;
+        this.textMapper = (audience, text) -> textMapper.apply(text);
+    }
+
+    public static TitleAction contextual(@NotNull String splitter, java.util.function.BiFunction<Audience, String, Component> textMapper) {
+        return new TitleAction(splitter, textMapper);
+    }
+
+    /** Context is resolved at execution time; player-specific components are never cached. */
+    private TitleAction(@NotNull String splitter, java.util.function.BiFunction<Audience, String, Component> textMapper) {
+        this.splitter = java.util.Objects.requireNonNull(splitter);
+        this.textMapper = java.util.Objects.requireNonNull(textMapper);
     }
 
     @Override
@@ -31,8 +41,8 @@ public class TitleAction implements Action<Audience> {
 
         if (parts.length < 1) return;
 
-        Component title = textMapper.apply(parts[0]);
-        Component subtitle = parts.length > 1 ? textMapper.apply(parts[1]) : Component.empty();
+        Component title = textMapper.apply(audience, parts[0]);
+        Component subtitle = parts.length > 1 ? textMapper.apply(audience, parts[1]) : Component.empty();
 
         audience.showTitle(Title.title(title, subtitle));
     }
