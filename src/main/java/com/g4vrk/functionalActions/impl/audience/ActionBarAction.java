@@ -19,8 +19,12 @@ public class ActionBarAction implements Action<Audience> {
         this.textMapper = (audience, text) -> textMapper.apply(text);
     }
 
+    public static ActionBarAction contextual(java.util.function.BiFunction<Audience, String, Component> textMapper) {
+        return new ActionBarAction(textMapper);
+    }
+
     /** Context is resolved at execution time; player-specific components are never cached. */
-    public ActionBarAction(java.util.function.BiFunction<Audience, String, Component> textMapper) {
+    private ActionBarAction(java.util.function.BiFunction<Audience, String, Component> textMapper) {
         this.textMapper = java.util.Objects.requireNonNull(textMapper);
     }
 

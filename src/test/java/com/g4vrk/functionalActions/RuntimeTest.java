@@ -32,13 +32,24 @@ class RuntimeTest {
     @Test void resolvesContextAtExecutionTime() {
         AtomicInteger calls = new AtomicInteger();
         Audience first = Audience.empty();
-        var action = new MessageAction((audience, text) -> {
+        var action = MessageAction.contextual((audience, text) -> {
             assertSame(first, audience);
             calls.incrementAndGet();
             return Component.text(text);
         });
         action.execute(first, "hello");
         assertEquals(1, calls.get());
+    }
+
+    @Test void contextualDefaultsWorkWithoutReplacingRegistryEntries() {
+        var registry = new SimpleActionRegistry<Audience>();
+        AtomicInteger calls = new AtomicInteger();
+        com.g4vrk.functionalActions.defaults.DefaultActions.Adventure.registerContextualDefaults(registry,
+                (audience, text) -> { calls.incrementAndGet(); return Component.text(text); }, ";");
+        var parser = new SimpleActionParser<>(registry);
+        parser.parse("message hello").execute(Audience.empty());
+        parser.parse("message hello").execute(Audience.empty());
+        assertEquals(2, calls.get());
     }
 
     @Test void supportsConcurrentParsingAndBoundedSyntaxCache() throws Exception {

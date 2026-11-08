@@ -18,8 +18,12 @@ public class MessageAction implements Action<Audience> {
         this.textMapper = (audience, text) -> textMapper.apply(text);
     }
 
+    public static MessageAction contextual(java.util.function.BiFunction<Audience, String, Component> textMapper) {
+        return new MessageAction(textMapper);
+    }
+
     /** Context is resolved at execution time; player-specific components are never cached. */
-    public MessageAction(java.util.function.BiFunction<Audience, String, Component> textMapper) {
+    private MessageAction(java.util.function.BiFunction<Audience, String, Component> textMapper) {
         this.textMapper = java.util.Objects.requireNonNull(textMapper);
     }
 

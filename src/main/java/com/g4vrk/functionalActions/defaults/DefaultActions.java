@@ -52,6 +52,31 @@ public final class DefaultActions {
 
     }
 
+    private static void registerCommon(
+            final ActionRegistry<? extends Audience> registry,
+            final java.util.function.BiFunction<Audience, String, Component> mapper,
+            final String splitter
+    ) {
+        final MessageAction message = MessageAction.contextual(mapper);
+        final ActionBarAction bar = ActionBarAction.contextual(mapper);
+        final TitleAction title = TitleAction.contextual(splitter, mapper);
+        registry.register(message, "message", "msg");
+        registry.register(bar, "actionbar", "bar");
+        registry.register(title, "title", "show-title");
+        registry.register(new SoundAction(splitter), "sound", "play-sound");
+        registry.register((com.g4vrk.functionalActions.Action<Audience>) (ignored, args) -> {
+            for (org.bukkit.entity.Player player : org.bukkit.Bukkit.getOnlinePlayers()) message.execute(player, args);
+            message.execute(org.bukkit.Bukkit.getConsoleSender(), args);
+        }, "broadcast", "bc");
+        registry.register((com.g4vrk.functionalActions.Action<Audience>) (ignored, args) -> {
+            for (org.bukkit.entity.Player player : org.bukkit.Bukkit.getOnlinePlayers()) bar.execute(player, args);
+        }, "broadcast-actionbar", "broadcast-bar", "bcbar");
+        registry.register((com.g4vrk.functionalActions.Action<Audience>) (ignored, args) -> {
+            for (org.bukkit.entity.Player player : org.bukkit.Bukkit.getOnlinePlayers()) title.execute(player, args);
+        }, "broadcast-title", "bctitle");
+        registry.register(new ConsoleCommandAction(), "console-command", "console", "cmd");
+    }
+
     public static final class Player {
 
         public static void registerDefaults(
@@ -99,6 +124,15 @@ public final class DefaultActions {
     }
 
     public static final class Adventure {
+        /** Resolves text separately for each audience at execution time, including broadcasts. */
+        public static void registerContextualDefaults(
+                final ActionRegistry<Audience> registry,
+                final java.util.function.BiFunction<Audience, String, Component> textMapper,
+                final String splitter
+        ) {
+            registerCommon(registry, textMapper, splitter);
+        }
+
 
         public static void registerDefaults(
                 final @NotNull ActionRegistry<Audience> registry,

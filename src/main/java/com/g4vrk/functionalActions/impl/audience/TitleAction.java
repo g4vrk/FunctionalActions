@@ -23,8 +23,12 @@ public class TitleAction implements Action<Audience> {
         this.textMapper = (audience, text) -> textMapper.apply(text);
     }
 
+    public static TitleAction contextual(@NotNull String splitter, java.util.function.BiFunction<Audience, String, Component> textMapper) {
+        return new TitleAction(splitter, textMapper);
+    }
+
     /** Context is resolved at execution time; player-specific components are never cached. */
-    public TitleAction(@NotNull String splitter, java.util.function.BiFunction<Audience, String, Component> textMapper) {
+    private TitleAction(@NotNull String splitter, java.util.function.BiFunction<Audience, String, Component> textMapper) {
         this.splitter = java.util.Objects.requireNonNull(splitter);
         this.textMapper = java.util.Objects.requireNonNull(textMapper);
     }
