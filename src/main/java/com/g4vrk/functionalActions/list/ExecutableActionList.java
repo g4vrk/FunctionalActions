@@ -1,92 +1,120 @@
 package com.g4vrk.functionalActions.list;
 
 import com.g4vrk.functionalActions.ExecutableAction;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
+/**
+ * The parsed action lines of one config entry, run in order.
+ *
+ * <p>{@link #run(Object)} does not wrap the arguments in an identity function: an action without
+ * a pre-processor is called directly, so a list costs one call per line.</p>
+ *
+ * @param <T> the context the actions run for
+ */
 public class ExecutableActionList<T> implements Iterable<ExecutableAction<? super T>> {
 
     private final List<ExecutableAction<? super T>> actions;
 
-    public ExecutableActionList(
-            @NotNull List<ExecutableAction<? super T>> actions
-    ) {
-        this.actions = new ObjectArrayList<>(actions);
+    public ExecutableActionList(final @NotNull List<ExecutableAction<? super T>> actions) {
+        this.actions = new ArrayList<>(actions);
     }
 
+    /**
+     * Runs every line with the arguments it was parsed with.
+     *
+     * @param ctx the context
+     */
     public void run(final @NotNull T ctx) {
-        run(ctx, UnaryOperator.identity());
+        Objects.requireNonNull(ctx, "context is null");
+
+        for (int index = 0; index < this.actions.size(); index++) {
+            this.actions.get(index).execute(ctx);
+        }
     }
 
-    public void run(final @NotNull T ctx, final @NotNull Function<String, String> preProcessor) {
+    /**
+     * Runs every line after its arguments went through a pre-processor.
+     *
+     * @param ctx          the context
+     * @param preProcessor what turns the arguments of a line into the ones its action gets,
+     *                     usually a placeholder replacer
+     */
+    public void run(final @NotNull T ctx, final @NotNull UnaryOperator<String> preProcessor) {
         Objects.requireNonNull(ctx, "context is null");
         Objects.requireNonNull(preProcessor, "preProcessor is null");
 
-        for (final ExecutableAction<? super T> action : actions) {
-            action.execute(ctx, preProcessor);
+        for (int index = 0; index < this.actions.size(); index++) {
+            this.actions.get(index).execute(ctx, preProcessor);
         }
     }
 
+    /**
+     * Appends a parsed line.
+     *
+     * @param action the line
+     */
     public void add(final @NotNull ExecutableAction<T> action) {
-        actions.add(action);
+        this.actions.add(action);
     }
 
-    public @Nullable ExecutableAction<? super T> get(int index) {
-        if (index < 0 || index >= size()) {
+    /**
+     * @param index the position
+     * @return the line, or {@code null} when the position is out of range
+     */
+    public @Nullable ExecutableAction<? super T> get(final int index) {
+        if (index < 0 || index >= this.actions.size()) {
             return null;
         }
 
-        return actions.get(index);
+        return this.actions.get(index);
     }
 
+    /**
+     * @return the first line, or {@code null} when the list is empty
+     */
     public @Nullable ExecutableAction<? super T> getFirst() {
-        if (isEmpty()) {
-            return null;
-        }
-
-        return actions.get(0);
+        return this.actions.isEmpty() ? null : this.actions.get(0);
     }
 
+    /**
+     * @return the last line, or {@code null} when the list is empty
+     */
     public @Nullable ExecutableAction<? super T> getLast() {
-        if (isEmpty()) {
-            return null;
-        }
-
-        return actions.get(size() - 1);
+        return this.actions.isEmpty() ? null : this.actions.get(this.actions.size() - 1);
     }
 
     public boolean isEmpty() {
-        return actions.isEmpty();
+        return this.actions.isEmpty();
     }
 
     public int size() {
-        return actions.size();
+        return this.actions.size();
     }
 
     public @NotNull Stream<ExecutableAction<? super T>> stream() {
-        return actions.stream();
+        return this.actions.stream();
     }
 
     @Override
     public @NotNull Iterator<ExecutableAction<? super T>> iterator() {
-        return actions.iterator();
+        return this.actions.iterator();
     }
 
     @Override
     public void forEach(final @NotNull Consumer<? super ExecutableAction<? super T>> consumer) {
         Objects.requireNonNull(consumer, "consumer is null");
 
-        for (final ExecutableAction<? super T> action : actions) {
-            consumer.accept(action);
+        for (int index = 0; index < this.actions.size(); index++) {
+            consumer.accept(this.actions.get(index));
         }
     }
 

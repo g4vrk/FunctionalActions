@@ -11,7 +11,7 @@ plugins {
 
 group = "com.g4vrk"
 
-val baseVersion = "2.1.2"
+val baseVersion = "2.2.0"
 version = VersionUtility.version(project, baseVersion)
 
 description = "Configurable action framework for Bukkit/Paper plugins."
@@ -34,6 +34,9 @@ dependencies {
 
     compileOnly(libs.paper.api)
 
+    testImplementation("org.junit.jupiter:junit-jupiter:5.11.4")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.11.4")
+
 }
 
 
@@ -52,6 +55,12 @@ tasks {
     withType<JavaCompile>().configureEach {
 
         options.encoding = "UTF-8"
+
+    }
+
+    withType<Test>().configureEach {
+
+        useJUnitPlatform()
 
     }
 

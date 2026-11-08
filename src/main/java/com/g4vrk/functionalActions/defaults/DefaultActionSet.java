@@ -16,9 +16,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 
-public final class DefaultActions {
+public final class DefaultActionSet {
 
-    private DefaultActions() {}
+    private DefaultActionSet() {}
 
     private static void registerCommon(
             final @NotNull ActionRegistry<? extends Audience> registry,
