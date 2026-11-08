@@ -11,18 +11,23 @@ import java.util.function.Function;
 
 public class ActionBarAction implements Action<Audience> {
 
-    private final Function<String, Component> textMapper;
+    private final java.util.function.BiFunction<Audience, String, Component> textMapper;
 
     public ActionBarAction(
             @NotNull Function<String, Component> textMapper
     ) {
-        this.textMapper = textMapper;
+        this.textMapper = (audience, text) -> textMapper.apply(text);
+    }
+
+    /** Context is resolved at execution time; player-specific components are never cached. */
+    public ActionBarAction(java.util.function.BiFunction<Audience, String, Component> textMapper) {
+        this.textMapper = java.util.Objects.requireNonNull(textMapper);
     }
 
     @Override
     public void execute(@NotNull Audience audience, @Nullable String args) {
         if (args == null || args.isBlank()) return;
 
-        audience.sendActionBar(textMapper.apply(args));
+        audience.sendActionBar(textMapper.apply(audience, args));
     }
 }

@@ -33,6 +33,9 @@ repositories {
 dependencies {
 
     compileOnly(libs.paper.api)
+    testImplementation("org.junit.jupiter:junit-jupiter:6.1.3")
+    testImplementation("net.kyori:adventure-api:4.10.0")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.1.3")
 
 }
 
@@ -106,3 +109,5 @@ publishing {
     }
 
 }
+
+tasks.test { useJUnitPlatform() }
