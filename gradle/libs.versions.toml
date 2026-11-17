@@ -1,9 +1,11 @@
 [versions]
 paper-api = "1.18.2-R0.1-SNAPSHOT"
 shadow = "9.6.1"
+xseries = "14.0.0"
 
 [libraries]
 paper-api = { module = "io.papermc.paper:paper-api", version.ref = "paper-api" }
+xseries = { module = "com.github.cryptomorin:XSeries", version.ref = "xseries" }
 
 [plugins]
 shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
