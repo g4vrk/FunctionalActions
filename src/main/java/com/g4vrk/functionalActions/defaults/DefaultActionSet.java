@@ -47,9 +47,6 @@ public final class DefaultActionSet {
         registry.register(new BroadcastTitleAction(splitter, textMapper),
                 "broadcast-title", "bctitle");
 
-        registry.register(new ConsoleCommandAction(),
-                "console-command", "console", "cmd");
-
     }
 
     public static final class Player {
@@ -94,6 +91,9 @@ public final class DefaultActionSet {
 
             registry.register(new CloseInventoryAction(),
                     "close-inventory", "closeinv",  "close-inv");
+
+            registry.register(new ConsoleCommandAction(),
+                    "console-command", "console", "cmd");
         }
 
     }

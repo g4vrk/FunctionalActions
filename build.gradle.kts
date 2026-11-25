@@ -36,6 +36,7 @@ dependencies {
     implementation(libs.xseries)
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.11.4")
+    testImplementation("net.kyori:adventure-api:4.10.0")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.11.4")
 
 }
